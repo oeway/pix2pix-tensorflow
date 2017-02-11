@@ -112,11 +112,7 @@ class pix2pix(object):
     def load_random_samples(self):
         data = np.random.choice(glob('./datasets/{}/val/*.jpg'.format(self.dataset_name)), self.batch_size)
         sample = [load_data(sample_file) for sample_file in data]
-
-        if (self.is_grayscale):
-            sample_images = np.array(sample).astype(np.float32)[:, :, :, None]
-        else:
-            sample_images = np.array(sample).astype(np.float32)
+        sample_images = np.array(sample).astype(np.float32)
         return sample_images
 
     def sample_model(self, sample_dir, epoch, idx):
@@ -158,10 +154,8 @@ class pix2pix(object):
             for idx in xrange(0, batch_idxs):
                 batch_files = data[idx*self.batch_size:(idx+1)*self.batch_size]
                 batch = [load_data(batch_file) for batch_file in batch_files]
-                if (self.is_grayscale):
-                    batch_images = np.array(batch).astype(np.float32)[:, :, :, None]
-                else:
-                    batch_images = np.array(batch).astype(np.float32)
+
+                batch_images = np.array(batch).astype(np.float32)
 
                 # Update D network
                 _, summary_str = self.sess.run([d_optim, self.d_sum],
@@ -394,10 +388,7 @@ class pix2pix(object):
         print("Loading testing images ...")
         sample = [load_data(sample_file, is_test=True) for sample_file in sample_files]
 
-        if (self.is_grayscale):
-            sample_images = np.array(sample).astype(np.float32)[:, :, :, None]
-        else:
-            sample_images = np.array(sample).astype(np.float32)
+        sample_images = np.array(sample).astype(np.float32)
 
         sample_images = [sample_images[i:i+self.batch_size]
                          for i in xrange(0, len(sample_images), self.batch_size)]
